@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
 
 import numpy as np
 import pandas as pd
@@ -11,9 +9,6 @@ import random
 
 
 # ## Tic Tac Toe Game
-
-# In[2]:
-
 
 class TicTacToe:
     def __init__(self, pl1, pl2):
@@ -24,7 +19,6 @@ class TicTacToe:
         self.boardReshaped = None
         self.whoStarted = None
         
-    
     def whoStarts(self):
         """
         Function which decide which player goes first
@@ -38,12 +32,11 @@ class TicTacToe:
             self.whoStarted = -1
         return self.playerSymbol
     
-
     def winner(self):
         """
         Function that checks which player won
         """
-        # row
+        # rows
         for i in range(3):
             if sum(self.board[i, :]) == 3:
                 self.isEnd = True
@@ -51,8 +44,7 @@ class TicTacToe:
             if sum(self.board[i, :]) == -3:
                 self.isEnd = True
                 return -1
-        
-        # col
+        # columns
         for i in range(3):
             if sum(self.board[:, i]) == 3:
                 self.isEnd = True
@@ -60,8 +52,7 @@ class TicTacToe:
             if sum(self.board[:, i]) == -3:
                 self.isEnd = True
                 return -1
-        
-        # diagonal
+        # diagonals
         diag_sum1 = sum([self.board[i, i] for i in range(3)])
         diag_sum2 = sum([self.board[i, 2 - i] for i in range(3)])
         diag_sum = max(abs(diag_sum1), abs(diag_sum2))
@@ -71,17 +62,14 @@ class TicTacToe:
                 return 1
             else:
                 return -1
-
-        # tie
+        # draws
         if len(self.availablePositions()) == 0:
             self.isEnd = True
             return 0
-        
         # not end
         self.isEnd = False
         return None
     
-
     def availablePositions(self):
         """
         Check available Positions on board
@@ -93,7 +81,6 @@ class TicTacToe:
                     positions.append((i, j))
         return positions
     
-
     def updateState(self, position):
         self.board[position] = self.playerSymbol
         # switch player
@@ -107,7 +94,6 @@ class TicTacToe:
         Give Reward when game ends
         """
         result = self.winner()
-
         if result == 1:
             self.pl1.feedReward(1)
             self.pl2.feedReward(0)
@@ -122,7 +108,6 @@ class TicTacToe:
                 self.pl1.feedReward(0.6)
                 self.pl2.feedReward(0.4)
                 
-
     def reset(self):
         """
         Board Reset
@@ -132,18 +117,15 @@ class TicTacToe:
         self.isEnd = False
         self.whoStarted = None
         
-
     def play(self, rounds=1, verbose = False):
         """ 
         Fucnion which play and train computer players during n rounds  
-        
         """
         n_win = 0
         n_loses = 0
         n_tie = 0
         graph_data = pd.DataFrame()
         out = ''
-        
         for i in range(rounds):
             self.whoStarts()
             n_move = 1
@@ -191,10 +173,8 @@ class TicTacToe:
                     self.pl2.reset()
                     self.reset()
                     break                   
-                    
         return n_win, n_loses, n_tie, graph_data
-                        
-                        
+                            
     def showBoard(self):
         # pl1: x ------ pl2: o
         for i in range(0, 3):
@@ -213,9 +193,6 @@ class TicTacToe:
 
 
 # ## Definition of Player who Learns
-
-# In[3]:
-
 
 class computerPlayer:
     def __init__(self, name, e_greedy_rate = 0.1, learn_rate = 0.2):
@@ -269,11 +246,8 @@ class computerPlayer:
         self.states_value = pickle.load(fr)
         fr.close()
 
-
+        
 # ## Definition of Static Player, who does not learn
-
-# In[4]:
-
 
 class staticPlayer:
     # playes who knows some rules, but no evolve 
@@ -301,15 +275,11 @@ class staticPlayer:
 
 
 # Rules of Static Player: 
-#    - 1st - if it can win in one move, the player will choose that move
-#    - 2nd - if the opponent can win in move, the player will block that move
-#    - 3rd - if the player can choose one position in a way that will be with a possible combination of win in next move, it will choose that move
+#    - 1st - if it can win in one move, the player will choose that move (winning_move_check)
+#    - 2nd - if the opponent can win in move, the player will block that move (block_move_check)
+#    - 3rd - if the player can choose one position in a way that will be with a possible combination of win in next move, it will choose that move (second_move_check)
 #    - 4rd - otherwise, it will play random
 
-# In[5]:
-
-
-# Rules
 def winning_move_check(current_board, positions, Symbol):
     """
     Function to identify coordinates that will result in a winning board state
@@ -380,11 +350,8 @@ def second_move_check(current_board, positions, Symbol):
             if not (1 not in np.diag(np.fliplr(current_board)) and (np.diag(np.fliplr(current_board)) == -1).sum() == 2):
                 return position
 
-
+            
 # ## Definition of Human Player
-
-# In[6]:
-
 
 class humanPlayer:
     def __init__(self, name):
@@ -409,17 +376,10 @@ class humanPlayer:
 
 # ## Training model
 
-# In[16]:
-
-
 pl1 = computerPlayer('pl1')
 # pl2 = computerPlayer('pl2')
 pl2 = staticPlayer('pl2')
 game = TicTacToe(pl1, pl2)
-
-
-# In[17]:
-
 
 print("training...")
 n_games = 10000
@@ -431,8 +391,7 @@ print(f'Player 1 lose {lose} out of {n_games} games (lose rate = {round((lose/n_
 print(f'Player 1 drew {tie} out of {n_games} games (tie rate = {round((tie/n_games) * 100, 2)}%)')
 
 
-# In[20]:
-
+# Check progression of computer player along time
 
 bins = np.arange(1, n_games/1000) * 1000
 data['game_counter_bins'] = np.digitize(data["n_games"], bins, right=True)
@@ -444,34 +403,14 @@ ax.legend(labels = ['Loses', 'Draws', 'Wins'],loc='center left', bbox_to_anchor=
 ax.set_title('Results Distribution Vs Games Played')
 
 
-# In[ ]:
-
-
-pl1.loadKnowledge('Knowledge_pl1_pl2_smart_100000')
-
-
-# In[46]:
-
-
-# pl1.saveKnowledge('_pl2_static_10000')
+# Save Policy 
 pl1.saveKnowledge('_100,000_p2_learning')
 
 
 # ## Playing against model
 
-# In[38]:
-
-
-# play with human
 pl1 = computerPlayer("computer")
 pl1.loadKnowledge('policy_p1_100,000_p2_learning')
-# pl1.loadKnowledge("Knowledge_pl1_pl2_static_10000")
-pl3 = humanPlayer("Andre")
-
-
-# In[44]:
-
-
+pl3 = humanPlayer("Human")
 game = TicTacToe(pl1, pl3)
 game.play(verbose=True);
-
