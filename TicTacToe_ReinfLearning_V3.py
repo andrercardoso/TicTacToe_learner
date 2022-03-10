@@ -120,12 +120,14 @@ class TicTacToe:
     def play(self, rounds=1, verbose = False):
         """ 
         Fucnion which play and train computer players during n rounds  
+        
         """
         n_win = 0
         n_loses = 0
         n_tie = 0
         graph_data = pd.DataFrame()
         out = ''
+        
         for i in range(rounds):
             self.whoStarts()
             n_move = 1
@@ -137,16 +139,14 @@ class TicTacToe:
                     positions = self.availablePositions()
                     pl1_action = self.pl1.chooseAction(positions, self.board, self.playerSymbol)
                     self.updateState(pl1_action)
-                    board_reshaped = str(self.board.reshape(9))
-                    self.pl1.states.append(board_reshaped)
+                    self.pl1.states_action.append(str(self.board.reshape(9))+ ' '+ str(pl1_action))
 
                 else:
                     # Player 2
                     positions = self.availablePositions()
                     pl2_action = self.pl2.chooseAction(positions, self.board, self.playerSymbol)
                     self.updateState(pl2_action)
-                    board_reshaped = str(self.board.reshape(9))
-                    self.pl2.states.append(board_reshaped)
+                    self.pl2.states_action.append(str(self.board.reshape(9))+ ' '+ str(pl2_action))
                     
                 win = self.winner() 
                 n_move += 1
@@ -199,8 +199,8 @@ class computerPlayer:
         self.name = name
         self.lr = learn_rate
         self.e_greedy_rate = e_greedy_rate # tradeoff between exploration-exploitation 
-        self.states = []  # record all positions taken
-        self.states_value = {}  # state -> score of state
+        self.states_action = []  # record all positions taken
+        self.action_value = {}  # state -> score of state
 
     def chooseAction(self, positions, current_board, symbol):
         value_max = -1
@@ -213,11 +213,10 @@ class computerPlayer:
                 # choose option which seems the best - exploitation
                 next_board = current_board.copy()
                 next_board[p] = symbol
-                next_boardReshaped = str(next_board.reshape(9))
-                if self.states_value.get(next_boardReshaped) is None:
+                if self.action_value.get(str(next_board.reshape(9)) + ' ' + str(p)) is None:
                     value = 0 
                 else:
-                    value = self.states_value.get(next_boardReshaped)
+                    value = self.action_value.get(str(next_board.reshape(9)) + ' ' + str(p))
                 if value >= value_max:
                     value_max = value
                     action = p
@@ -227,23 +226,23 @@ class computerPlayer:
         """
         At the end of game, backpropagate and update states value
         """
-        for st in reversed(self.states):
-            if self.states_value.get(st) is None:
-                self.states_value[st] = 0
-            self.states_value[st] += self.lr * (reward - self.states_value[st])
-            reward = self.states_value[st]
+        for st in reversed(self.states_action):
+            if self.action_value.get(st) is None:
+                self.action_value[st] = 0
+            self.action_value[st] += self.lr * (reward - self.action_value[st])
+            reward = self.action_value[st]
 
     def reset(self):
-        self.states = []
+        self.states_action = []
 
     def saveKnowledge(self, extension = ''):
         fw = open('Knowledge_' + str(self.name)+ extension, 'wb')
-        pickle.dump(self.states_value, fw)
+        pickle.dump(self.action_value, fw)
         fw.close()
 
     def loadKnowledge(self, file):
         fr = open(file, 'rb')
-        self.states_value = pickle.load(fr)
+        self.action_value = pickle.load(fr)
         fr.close()
 
         
@@ -253,7 +252,7 @@ class staticPlayer:
     # playes who knows some rules, but no evolve 
     def __init__(self, name):
         self.name = name
-        self.states = []
+        self.states_action = []
 
     def chooseAction(self, positions, current_board, symbol):
         if winning_move_check(current_board, positions, symbol) != None:
@@ -356,7 +355,7 @@ def second_move_check(current_board, positions, Symbol):
 class humanPlayer:
     def __init__(self, name):
         self.name = name
-        self.states = []
+        self.states_action = []
 
     def chooseAction(self, positions, board, playerSymbol):
         while True:
@@ -370,9 +369,8 @@ class humanPlayer:
         pass
 
     def reset(self):
-        self.states = []
+        self.states_action = []
         pass
-
 
 # ## Training model
 
