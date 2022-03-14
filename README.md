@@ -17,6 +17,7 @@ Run play.py to play against a computer agent trained through 100,000 games again
 It was used Q-learning, a model-free reinforcement learning algorithm, to learn the value of an action in a particular state of the game. The Q(s,a), which represent the expected reward given at the end of the game if the agent picks action 'a' in state 's', was calculated based on the Bellman Equation. 
 
 
+
 ![image](https://user-images.githubusercontent.com/98130096/158215465-1118929e-139f-441d-8640-b29a7b3278c1.png)
 
 Where:
