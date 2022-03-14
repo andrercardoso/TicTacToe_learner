@@ -9,7 +9,7 @@ class ComputerPlayer:
         self.df = discount_factor
         self.e_greedy_rate = e_greedy_rate  # tradeoff between exploration-exploitation
         self.state_action = []  # record all positions taken
-        self.Q_value = {}  # state -> score of state
+        self.Q_value = {}  # state_action -> score of state_action
 
     def choose_action(self, positions, current_board, symbol):
         value_max = -1
