@@ -31,20 +31,16 @@ class TicTacToe:
         """
         # row
         for i in range(3):
-            if sum(self.board[i, :]) == 3:
+            self.pontuation = sum(self.board[i, :])
+            if abs(self.pontuation) == 3:
                 self.isEnd = True
-                return 1
-            if sum(self.board[i, :]) == -3:
-                self.isEnd = True
-                return -1
+                return 1 if self.pontuation == 3 else -1
         # col
         for i in range(3):
-            if sum(self.board[:, i]) == 3:
+            self.pontuation = sum(self.board[:, i])
+            if abs(self.pontuation) == 3:
                 self.isEnd = True
-                return 1
-            if sum(self.board[:, i]) == -3:
-                self.isEnd = True
-                return -1
+                return 1 if self.pontuation == 3 else -1
 
         # diagonal
         diag_sum1 = sum(self.board[i, i] for i in range(3))
@@ -57,8 +53,8 @@ class TicTacToe:
         if len(self.available_positions()) == 0:
             self.isEnd = True
             return 0
+        
         # not end
-        self.isEnd = False
         return None
 
     def available_positions(self):
@@ -144,7 +140,8 @@ class TicTacToe:
                     self.show_board()
 
                 if win is not None:
-                    graph_data = graph_data.append({"n_games": i, "result": win}, ignore_index=True)
+                    new_df = pd.DataFrame({"n_games": i, "result": win}, index=[0])
+                    graph_data = pd.concat([graph_data, new_df])
                     if win == -1:
                         n_loses += 1
                         out = self.pl2.name + " wins!"

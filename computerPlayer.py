@@ -20,10 +20,10 @@ class ComputerPlayer:
         else:
             for p in positions:
                 # choose option which seems the best - exploitation
-                if self.Q_value.get(str(current_board.reshape(9)) + ' ' + str(p)) is None:
+                if (self.Q_value.get(f'{str(current_board.reshape(9))} {str(p)}') is None):
                     value = 0
                 else:
-                    value = self.Q_value.get(str(current_board.reshape(9)) + ' ' + str(p))
+                    value = self.Q_value.get(f'{str(current_board.reshape(9))} {str(p)}')
                 if value >= value_max:
                     value_max = value
                     action = p
@@ -45,11 +45,9 @@ class ComputerPlayer:
         self.state_action = []
 
     def save_knowledge(self, extension=''):
-        fw = open('Policy_' + extension, 'wb')
-        pickle.dump(self.Q_value, fw)
-        fw.close()
+        with open(f'Policy_{extension}', 'wb') as fw:
+            pickle.dump(self.Q_value, fw)
 
     def load_knowledge(self, file):
-        fr = open(file, 'rb')
-        self.Q_value = pickle.load(fr)
-        fr.close()
+        with open(file, 'rb') as fr:
+            self.Q_value = pickle.load(fr)

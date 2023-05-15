@@ -14,9 +14,9 @@ if __name__ == '__main__':
     n_games = 50000
     win, lose, tie, data = game.play(n_games, verbose=False)
     print("Completed!")
-    print(f'Player 1 won {win} out of {n_games} games (win rate = {round((win / n_games) * 100, 2)}%)')
-    print(f'Player 1 lose {lose} out of {n_games} games (lose rate = {round((lose / n_games) * 100, 2)}%)')
-    print(f'Player 1 drew {tie} out of {n_games} games (tie rate = {round((tie / n_games) * 100, 2)}%)')
+    print(f'Player {pl1.name} won {win} out of {n_games} games (win rate = {round((win / n_games) * 100, 2)}%)')
+    print(f'Player {pl1.name} lose {lose} out of {n_games} games (lose rate = {round((lose / n_games) * 100, 2)}%)')
+    print(f'Player {pl1.name} drew {tie} out of {n_games} games (tie rate = {round((tie / n_games) * 100, 2)}%)')
 
     # Graphic the agent evolution against staticPlayer
     bins = np.arange(1, n_games / 5000) * 5000
