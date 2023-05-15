@@ -5,8 +5,8 @@ class HumanPlayer:
 
     def choose_action(self, positions, board, symbol):
         while True:
-            row = int(input("Choose a row:"))
-            col = int(input("Choose a column:"))
+            row = int(input("Choose a row: "))
+            col = int(input("Choose a column: "))
             action = (row, col)
             if action in positions:
                 return action
@@ -16,4 +16,3 @@ class HumanPlayer:
 
     def reset(self):
         self.state_action = []
-        pass
