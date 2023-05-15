@@ -47,15 +47,12 @@ class TicTacToe:
                 return -1
 
         # diagonal
-        diag_sum1 = sum([self.board[i, i] for i in range(3)])
-        diag_sum2 = sum([self.board[i, 2 - i] for i in range(3)])
+        diag_sum1 = sum(self.board[i, i] for i in range(3))
+        diag_sum2 = sum(self.board[i, 2 - i] for i in range(3))
         diag_sum = max(abs(diag_sum1), abs(diag_sum2))
         if diag_sum == 3:
             self.isEnd = True
-            if diag_sum1 == 3 or diag_sum2 == 3:
-                return 1
-            else:
-                return -1
+            return 1 if diag_sum1 == 3 or diag_sum2 == 3 else -1
         # tie
         if len(self.available_positions()) == 0:
             self.isEnd = True
@@ -78,10 +75,7 @@ class TicTacToe:
     def update_state(self, position):
         self.board[position] = self.playerSymbol
         # switch player
-        if self.playerSymbol == 1:
-            self.playerSymbol = -1
-        else:
-            self.playerSymbol = 1
+        self.playerSymbol = -1 if self.playerSymbol == 1 else 1
 
     def give_reward(self):
         """
@@ -133,33 +127,33 @@ class TicTacToe:
                 if self.playerSymbol == 1:  # Player 1
                     positions = self.available_positions()
                     pl1_action = self.pl1.choose_action(positions, self.board, self.playerSymbol)
-                    self.pl1.state_action.append(str(self.board.reshape(9)) + ' ' + str(pl1_action))
+                    self.pl1.state_action.append(f'{str(self.board.reshape(9))} {str(pl1_action)}')
                     self.update_state(pl1_action)
                 else:
                     # Player 2
                     positions = self.available_positions()
                     pl2_action = self.pl2.choose_action(positions, self.board, self.playerSymbol)
-                    self.pl2.state_action.append(str(self.board.reshape(9)) + ' ' + str(pl2_action))
+                    self.pl2.state_action.append(f'{str(self.board.reshape(9))} {str(pl2_action)}')
                     self.update_state(pl2_action)
 
                 win = self.winner()
                 n_move += 1
                 if verbose:
                     if n_move % 2 == 0:
-                        print(f'Round {int(n_move / 2)}')
+                        print(f'Round {n_move // 2}')
                     self.show_board()
 
                 if win is not None:
                     graph_data = graph_data.append({"n_games": i, "result": win}, ignore_index=True)
-                    if win == 1:
-                        n_win += 1
-                        out = self.pl1.name + " wins!"
-                    elif win == -1:
+                    if win == -1:
                         n_loses += 1
                         out = self.pl2.name + " wins!"
                     elif win == 0:
                         n_tie += 1
                         out = "It's a draw!"
+                    elif win == 1:
+                        n_win += 1
+                        out = self.pl1.name + " wins!"
                     if verbose:
                         print(out)
                     self.give_reward()
@@ -173,10 +167,10 @@ class TicTacToe:
     def show_board(self):
         # pl1: x ------ pl2: o
         token = ''
-        for i in range(0, 3):
+        for i in range(3):
             print('-------------')
             out = '| '
-            for j in range(0, 3):
+            for j in range(3):
                 if self.board[i, j] == 1:
                     token = 'x'
                 if self.board[i, j] == -1:
