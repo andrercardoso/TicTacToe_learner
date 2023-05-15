@@ -6,9 +6,9 @@ Python system which learns how to play Tic Tac Toe through Reinforcement Learnin
 
 ## How to use?
 
-Run *training.py* to train a computer agent through 50,000 games against a static player (It's a computer player, who knows some basic rules, but who does not learn during time). It was used a static player in order to see graphically the evaluation of our computer agent during the games. 
+Run `training.py` to train a computer agent through 50,000 games against a static player (It's a computer player, who knows some basic rules, but who does not learn during time). It was used a static player in order to see graphically the evaluation of our computer agent during the games. 
 
-Run *play.py* to play against a computer agent (trained through 100,000 games against another computer agent. Challenges you to try to beat the agent player).
+Run `play.py` to play against a computer agent (trained through 100,000 games against another computer agent. Challenges you to try to beat the agent player).
 
 
 
