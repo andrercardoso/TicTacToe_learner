@@ -22,7 +22,7 @@ It was used Q-learning, a model-free reinforcement learning algorithm, to learn 
 
 Where:
   - The last term looks into the future and returns the largest Q value that is available, `ŝ` is the state that is the new state after performing action `a`. Then, action `â` is the best action in the next state `ŝ`.
-  - The learning rate `α` decides to what extent that we overwrite the old value.
+  - The learning rate `α` decides to what extent that we overwrite the old value. A factor of 0 makes the agent learn nothing (exclusively exploiting prior knowledge), while a factor of 1 makes the agent consider only the most recent information (ignoring prior knowledge to explore possibilities - exclusively exploration).
   - The discount factor `γ` decides how much future rewards should be weighted compared to rewards that are present at the current time step t.
   - The `R(s,a)` is the reward function which it will be very simple. If the agent performs an action `â` that wins the game from `s`, then `R(s,â) = 1`. Else if the agent makes a mistake and picks the wrong action `ã` such that it loses the game then `R(s,ã) = -1`. Otherwise, the reward is simply `R(s,a) = 0`.
  
